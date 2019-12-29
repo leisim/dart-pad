@@ -743,9 +743,10 @@ class Playground implements GistContainer, GistController {
       ..source = context.dartSource;
 
     try {
-      if (hasFlutterContent(_context.dartSource) &&
-          !isRunningInWebKit() &&
-          _hasShownWebKitDialog) {
+      if (true ||
+          hasFlutterContent(_context.dartSource) &&
+              !isRunningInWebKit() &&
+              _hasShownWebKitDialog) {
         final CompileDDCResponse response = await dartServices
             .compileDDC(compileRequest)
             .timeout(longServiceCallTimeout);

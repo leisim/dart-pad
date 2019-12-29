@@ -768,10 +768,16 @@ class Embed {
       });
     } else {
       dartServices
-          .compile(input)
+          .compileDDC(input)
           .timeout(longServiceCallTimeout)
-          .then((CompileResponse response) {
-        executionSvc.execute('', '', response.result);
+          .then((CompileDDCResponse response) {
+        print('EXECUTING DDC');
+        executionSvc.execute(
+          '',
+          '',
+          response.result,
+          modulesBaseUrl: response.modulesBaseUrl,
+        );
         ga?.sendEvent('execution', 'compile-success');
       }).catchError((e, st) {
         consoleExpandController.showOutput('Error compiling to JavaScript:\n$e',

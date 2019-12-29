@@ -14,9 +14,9 @@ import 'package:grinder/grinder.dart';
 import 'package:yaml/yaml.dart' as yaml;
 
 final FilePath _buildDir = FilePath('build');
-final FilePath _pkgDir = FilePath('third_party/pkg');
-final FilePath _routeDir = FilePath('third_party/pkg/route.dart');
-final FilePath _haikunatorDir = FilePath('third_party/pkg/haikunatordart');
+final FilePath _pkgDir = FilePath('third_party\\pkg');
+final FilePath _routeDir = FilePath('third_party\\pkg/route.dart');
+final FilePath _haikunatorDir = FilePath('third_party\\pkg\\haikunatordart');
 
 Map get _env => Platform.environment;
 
@@ -86,8 +86,7 @@ serveCustomBackend() async {
         'to indicate the dart-services server to connect to');
   }
 
-  final String serverUrl =
-      Platform.environment[backendVariable] ?? 'http://localhost:8002';
+  final String serverUrl = 'https://services-5yl254ipcq-ew.a.run.app';
 
   // In all files *.dart.js in build/scripts/, replace
   // 'https://dart-services.appspot.com' with serverUrl.
@@ -119,7 +118,7 @@ serveCustomBackend() async {
 build() {
   PubApp.local('build_runner').run(['build', '-r', '-o', 'web:build']);
 
-  FilePath mainFile = _buildDir.join('scripts/playground.dart.js');
+  FilePath mainFile = _buildDir.join('scripts\\playground.dart.js');
   log('$mainFile compiled to ${_printSize(mainFile)}');
 
   FilePath testFile = _buildDir.join('test', 'web.dart.js');
@@ -127,26 +126,23 @@ build() {
     log('${testFile.path} compiled to ${_printSize(testFile)}');
   }
 
-  FilePath newEmbedDartFile =
-      _buildDir.join('scripts/embed_dart.dart.js');
+  FilePath newEmbedDartFile = _buildDir.join('scripts\\embed_dart.dart.js');
   log('$newEmbedDartFile compiled to ${_printSize(newEmbedDartFile)}');
 
   FilePath newEmbedFlutterFile =
-      _buildDir.join('scripts/embed_flutter.dart.js');
+      _buildDir.join('scripts\\embed_flutter.dart.js');
   log('$newEmbedFlutterFile compiled to ${_printSize(newEmbedFlutterFile)}');
 
-  FilePath newEmbedHtmlFile =
-      _buildDir.join('scripts/embed_html.dart.js');
+  FilePath newEmbedHtmlFile = _buildDir.join('scripts\\embed_html.dart.js');
   log('$newEmbedHtmlFile compiled to ${_printSize(newEmbedHtmlFile)}');
 
-  FilePath newEmbedInlineFile =
-      _buildDir.join('scripts/embed_inline.dart.js');
+  FilePath newEmbedInlineFile = _buildDir.join('scripts\\embed_inline.dart.js');
   log('$newEmbedInlineFile compiled to ${_printSize(newEmbedInlineFile)}');
 
   // Remove .dart files.
   int count = 0;
 
-  for (FileSystemEntity entity in getDir('build/packages')
+  for (FileSystemEntity entity in getDir('build\\packages')
       .listSync(recursive: true, followLinks: false)) {
     if (entity is! File) continue;
     if (!entity.path.endsWith('.dart')) continue;
@@ -158,11 +154,11 @@ build() {
 
   // Run vulcanize.
   // Imports vulcanized, not inlined for IE support
-  vulcanize('index.html');
+  /*vulcanize('index.html');
   vulcanize('embed-dart.html');
   vulcanize('embed-html.html');
   vulcanize('embed-flutter.html');
-  vulcanize('embed-inline.html');
+  vulcanize('embed-inline.html');*/
 }
 
 void copyPackageResources(String packageName, Directory destDir) {
@@ -196,6 +192,7 @@ void copyPackageResources(String packageName, Directory destDir) {
 vulcanize(String filepath) {
   FilePath htmlFile = _buildDir.join(filepath);
   log('${htmlFile.path} original: ${_printSize(htmlFile)}');
+  print(_buildDir.path);
   ProcessResult result = Process.runSync(
       'vulcanize',
       [
@@ -203,17 +200,17 @@ vulcanize(String filepath) {
         '--inline-css',
         '--inline-scripts',
         '--exclude',
-        ' scripts/embed_dart.dart.js',
+        ' scripts\\embed_dart.dart.js',
         '--exclude',
-        ' scripts/embed_flutter.dart.js',
+        ' scripts\\embed_flutter.dart.js',
         '--exclude',
-        ' scripts/embed_html.dart.js',
+        ' scripts\\embed_html.dart.js',
         '--exclude',
-        ' scripts/embed_inline.dart.js',
+        ' scripts\\embed_inline.dart.js',
         '--exclude',
-        'scripts/playground.dart.js',
+        'scripts\\playground.dart.js',
         '--exclude',
-        'scripts/codemirror.js',
+        'scripts\\codemirror.js',
         filepath,
       ],
       workingDirectory: _buildDir.path);
