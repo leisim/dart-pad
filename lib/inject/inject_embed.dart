@@ -9,31 +9,34 @@ import 'package:html_unescape/html_unescape.dart';
 import 'package:logging/logging.dart';
 
 import 'inject_parser.dart';
+import 'dart:js' as js;
 
 Logger _logger = Logger('dartpad-embed');
 
 // Use this prefix for local development:
 //var iframePrefix = '../';
-var iframePrefix = 'https://dartpad.dev/';
+var iframePrefix = 'https://dartpad.hivedb.dev/';
 
 /// Replaces all code snippets marked with the 'run-dartpad' class with an
 /// instance of DartPad.
 void main() {
-  _logger.onRecord.listen(logToJsConsole);
-  var snippets = querySelectorAll('code');
-  for (var snippet in snippets) {
-    if (snippet.classes.isEmpty) {
-      continue;
-    }
+  js.context['injectDartpad'] = () {
+    _logger.onRecord.listen(logToJsConsole);
+    var snippets = querySelectorAll('code');
+    for (var snippet in snippets) {
+      if (snippet.classes.isEmpty) {
+        continue;
+      }
 
-    var className = snippet.classes.first;
-    var parser = LanguageStringParser(className);
-    if (!parser.isValid) {
-      continue;
-    }
+      var className = snippet.classes.first;
+      var parser = LanguageStringParser(className);
+      if (!parser.isValid) {
+        continue;
+      }
 
-    _injectEmbed(snippet, parser.options);
-  }
+      _injectEmbed(snippet, parser.options);
+    }
+  };
 }
 
 String iframeSrc(Map<String, String> options) {
