@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+    <script>
+        (async function() {
+            var databases = await window.indexedDB.databases();
+            for (var db of databases) {
+                window.indexedDB.deleteDatabase(db.name);
+            }
+        })();
+    </script>
+</body>
+
+</html>
